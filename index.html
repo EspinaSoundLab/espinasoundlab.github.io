@@ -37,7 +37,8 @@
 
   h1 img {
     display: block;
-    max-width: 100%;
+    max-width: 300px; /* scale to match old h1 size on desktop */
+    width: 100%;
     height: auto;
   }
 
@@ -62,6 +63,9 @@
     }
     body::after {
       background: rgba(255,255,255,0.9);
+    }
+    h1 img {
+      max-width: 200px; /* smaller wordmark on mobile */
     }
   }
 </style>
