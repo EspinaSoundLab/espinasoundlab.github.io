@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Espina Sound Lab</title>
 <style>
-  /* Body styling with background logo */
+  /* Body with background logo */
   body {
     font-family: "Courier New", Courier, monospace;
-    background: #ffffff url('logo.png') no-repeat center center;
-    background-size: contain; /* adjust as needed */
+    background: #ffffff url('logo.png') no-repeat center top;
+    background-size: contain; /* scales logo to fit screen */
     background-repeat: no-repeat;
     margin: 0;
     padding: 80px 20px;
@@ -18,7 +18,7 @@
     position: relative;
   }
 
-  /* Add a subtle overlay to make text readable over logo */
+  /* Optional overlay for readability */
   body::after {
     content: "";
     position: fixed;
@@ -28,10 +28,17 @@
     z-index: -1;
   }
 
+  /* Wordmark header */
   h1 {
-    font-size: 38px;
-    font-weight: bold;
+    font-size: 0; /* hide fallback text */
     margin-bottom: 20px;
+    text-align: left;
+  }
+
+  h1 img {
+    display: block;
+    max-width: 100%;
+    height: auto;
   }
 
   a {
@@ -47,12 +54,22 @@
     display: block;
     margin: 6px 0;
   }
+
+  /* Mobile adjustments */
+  @media (max-width: 600px) {
+    body {
+      padding: 40px 15px;
+    }
+    body::after {
+      background: rgba(255,255,255,0.9);
+    }
+  }
 </style>
 </head>
 <body>
 
 <h1>
-  <img src="wordmark.png" alt="Espina Sound Lab" style="max-width:100%; height:auto;">
+  <img src="wordmark.png" alt="Espina Sound Lab">
 </h1>
 
 <p>Mixing and Mastering Studio</p>
