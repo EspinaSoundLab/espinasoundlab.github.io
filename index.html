@@ -8,14 +8,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Bytesized&family=Jacquard+12&family=Jersey+20+Charted&family=Micro+5&family=Nabla&family=Orbitron:wght@400..900&family=Silkscreen:wght@400;700&family=Tiny5&display=swap');
 </style>
 
-
 <style>
   /* Body with dark background and background logo */
   body {
     font-family: "Silkscreen", Courier, monospace;
-      font-size: 16px; 
+    font-size: 16px; 
     background: #000000 url('logo.png') no-repeat center 25%;
-     background-size:80% auto;
+    background-size:80% auto;
     background-repeat: no-repeat;
     color: #ffffff; /* white text */
     margin: 10;
@@ -40,7 +39,6 @@
     font-size: 0; /* hide fallback text */
     margin-bottom: 20px;
     margin-top: 0;
-
     text-align: left;
   }
 
@@ -56,11 +54,159 @@
     text-decoration: none;
   }
 
-  
-
   .links a {
     display: block;
     margin: 6px 0;
+    position: relative;
+    transition: color 0.2s ease;
+  }
+
+  .links a:hover {
+    color: rgb(47, 106, 105); /* cyan glow */
+  }
+
+  /* ghost layer */
+  .links a::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transform: translate(2px, -2px);
+    text-shadow: -2px 2px rgb(7, 83, 130);
+    pointer-events: none;
+    transition: opacity 0.1s ease-in-out;
+  }
+
+  .links a:hover::after {
+    opacity: 1;
+  }
+
+  /* tiny jitter flicker on hover for that glitch feel */
+  .links a:hover {
+    animation: glitchFlicker 0.2s steps(2) 1;
+    text-shadow: 0 0 1px #0ff, 0 0 12px #0ff;
+  }
+
+  @keyframes glitchFlicker {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(1px); }
+    100% { transform: translateX(0); }
+  }
+
+  .bg-logo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: auto;
+    background: url('logo.png') no-repeat center center;
+    background-size: contain;
+    opacity: 0.2;
+    z-index: -1;
+    animation: pulseBg 3s ease-in-out infinite;
+  }
+
+  @keyframes pulseBg {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
+    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.3; }
+  }
+
+  p.tagline {
+    display: inline-block;
+    transition: transform 0s ease;
+  }
+
+  p.tagline:hover {
+    transform: translateX(0px);
+  }
+
+  /* Submit Track Dialog matching your current site */
+  #submitDialog {
+    display: none;
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+  }
+
+  #submitDialog form {
+    background: #000; /* same as body background */
+    color: #ffffff; /* match your site text */
+    border: 2px solid #0ff; /* same neon style as link hover */
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    font-family: "Silkscreen", Courier, monospace; /* match body font */
+    box-shadow: 0 0 15px #0ff; /* subtle glow matching hover links */
+    text-align: left;
+  }
+
+  #submitDialog h2 {
+    margin-top: 0;
+    color: #ffffff;
+  }
+
+  #submitDialog input,
+  #submitDialog textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px 0;
+    background: #000; /* match site background */
+    border: 1px solid #0ff; /* neon border like your hover links */
+    color: #ffffff; /* text color */
+    font-family: "Silkscreen", Courier, monospace;
+    box-sizing: border-box;
+  }
+
+  #submitDialog input::placeholder,
+  #submitDialog textarea::placeholder {
+    color: #aaa; /* slightly dim placeholder */
+    opacity: 0.7;
+  }
+
+  #submitDialog button {
+    margin-right: 10px;
+    padding: 8px 15px;
+    background: #0ff; /* match link hover cyan */
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-family: "Silkscreen", Courier, monospace;
+  }
+
+  #submitDialog button:hover {
+    background: #33ffff; /* brighter cyan hover effect */
+  }
+
+  /* Two fields per line inside popup */
+  #submitDialog .two-fields {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  #submitDialog .two-fields > div {
+    flex: 1;
+  }
+
+  /* Sections below menu */
+  .content-section {
+    display: none;
+    margin-top: 20px;
+    padding: 15px 0;
+    border-left: 2px solid #0ff;
+    padding-left: 12px;
+    text-shadow: 0 0 5px #0ff;
+  }
+  .content-section p {
+    margin: 5px 0;
   }
 
   /* Mobile adjustments */
@@ -69,160 +215,13 @@
       padding: 40px 15px;
     }
     body::after {
-      background: rgba(0,0,0,0.5); /* slightly more transparent on mobile */
+      background: rgba(0,0,0,0.5);
     }
     h1 img {
-      max-width: 200px; /* smaller wordmark on mobile */
+      max-width: 200px;
     }
   }
-
-.links a {
-  position: relative;
-  transition: color 0.2s ease;
-}
-
-.links a:hover {
-  color: rgb(47, 106, 105); /* cyan glow */
-}
-
-/* ghost layer */
-.links a::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  transform: translate(2px, -2px);
-  text-shadow: -2px 2px rgb(7, 83, 130);
-  pointer-events: none;
-  transition: opacity 0.1s ease-in-out;
-}
-
-.links a:hover::after {
-  opacity: 1;
-}
-
-/* tiny jitter flicker on hover for that glitch feel */
-.links a:hover {
-  animation: glitchFlicker 0.2s steps(2) 1;
-}
-
-@keyframes glitchFlicker {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(1px); }
-  100% { transform: translateX(0); }
-}
-.bg-logo {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60%;          /* adjust size */
-  height: auto;
-  background: url('logo.png') no-repeat center center;
-  background-size: contain;
-  opacity: 0.2;        /* subtle */
-  z-index: -1;          /* behind content */
-  animation: pulseBg 3s ease-in-out infinite;
-}
-
-@keyframes pulseBg {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
-  50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.3; }
-}
-
-p.tagline {
-  display: inline-block;
-  transition: transform 0s ease;
-}
-
-p.tagline:hover {
-  transform: translateX(0px);
-}
-.links a:hover {
-  text-shadow: 0 0 1px #0ff, 0 0 12px #0ff;
-}
-
-/* Submit Track Dialog matching your current site */
-#submitDialog {
-  display: none;
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: #000; /* same as body background */
-  color: #ffffff; /* match your site text */
-  border: 2px solid #0ff; /* same neon style as link hover */
-  padding: 30px;
-  z-index: 100;
-  max-width: 400px;
-  width: 90%;
-  font-family: "Silkscreen", Courier, monospace; /* match body font */
-  box-shadow: 0 0 15px #0ff; /* subtle glow matching hover links */
-  text-align: left;
-}
-
-#submitDialog h2 {
-  margin-top: 0;
-  color: #ffffff;
-}
-
-#submitDialog input,
-#submitDialog textarea {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0 15px 0;
-  background: #000; /* match site background */
-  border: 1px solid #0ff; /* neon border like your hover links */
-  color: #ffffff; /* text color */
-  font-family: "Silkscreen", Courier, monospace;
-}
-
-#submitDialog input::placeholder,
-#submitDialog textarea::placeholder {
-  color: #aaa; /* slightly dim placeholder */
-  opacity: 0.7;
-}
-
-#submitDialog button {
-  margin-right: 10px;
-  padding: 8px 15px;
-  background: #0ff; /* match link hover cyan */
-  border: none;
-  color: #000;
-  cursor: pointer;
-  font-family: "Silkscreen", Courier, monospace;
-}
-
-#submitDialog button:hover {
-  background: #33ffff; /* brighter cyan hover effect */
-}
-
-/* Two fields per line inside popup */
-#submitDialog .two-fields {
-  display: flex;
-  gap: 10px; /* space between two fields */
-  margin-bottom: 15px;
-}
-
-#submitDialog .two-fields > div {
-  flex: 1;
-}
-
-/* Inputs & textarea */
-#submitDialog input,
-#submitDialog textarea {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  background: #000; /* matches site */
-  border: 1px solid #0ff; /* neon border */
-  color: #fff; /* text color */
-  font-family: "Silkscreen", Courier, monospace;
-  box-sizing: border-box;
-}
-
 </style>
-
 
 </head>
 <body>
@@ -233,22 +232,33 @@ p.tagline:hover {
 
 <p class="tagline">Mixing and Mastering Studio</p>
 
+<!-- Menu -->
 <div class="links">
-  <a href="#" data-text="Services">Services</a>
-  <a href="#" data-text="The Studio">The studio</a>
-  <a href="#" data-text="Prices">Prices</a>
-  <a href="#" data-text="Portfolio">Portfolio</a>
-<a href="#" id="submitBtn" data-text="Submit your track">Submit your track</a>
+  <a href="#" data-section="about" data-text="About">About</a>
+  <a href="#" data-section="studio" data-text="The Studio">The Studio</a>
+  <a href="#" data-section="services" data-text="Services">Services</a>
+  <a href="#" data-section="faq" data-text="FAQ / Workflow">FAQ / Workflow</a>
+  <a href="#" data-section="portfolio" data-text="Portfolio">Portfolio</a>
+  <a href="#" data-section="testimonials" data-text="Testimonials">Testimonials</a>
+  <a href="#" id="submitBtn" data-text="Submit Your Music">Submit Your Music</a>
   <a href="mailto:hello@espinasoundlab.xyz" data-text="Contact">Contact</a>
 </div>
+
+<!-- Sections -->
+<div id="section-about" class="content-section"></div>
+<div id="section-studio" class="content-section"></div>
+<div id="section-services" class="content-section"></div>
+<div id="section-faq" class="content-section"></div>
+<div id="section-portfolio" class="content-section"></div>
+<div id="section-testimonials" class="content-section"></div>
 
 <p style="margin-top:40px;">
 © Espina Sound Lab
 </p>
 
 <!-- Submit Track Dialog -->
-<div id="submitDialog">
-  <form action="https://formspree.io/f/mvgveynq" method="POST" target="_blank">
+<div id="submitDialog" style="display:none;">
+  <form id="trackForm" action="https://formspree.io/f/mvgveynq" method="POST" target="_blank">
     <h2>Track Submission</h2>
 
     <label for="name">Full Name:</label>
@@ -282,7 +292,7 @@ p.tagline:hover {
     </div>
 
     <label for="tracklink">Track Link:</label>
-    <input type="url" id="tracklink" name="tracklink" placeholder="WeTransfer / SwissTransfer">
+    <input type="url" id="tracklink" name="tracklink" placeholder="WeTransfer / SwissTransfer" required>
 
     <label for="notes">Additional Notes:</label>
     <textarea id="notes" name="notes"></textarea>
@@ -292,24 +302,107 @@ p.tagline:hover {
   </form>
 </div>
 
-
-
-
 <script>
-const dialog = document.getElementById("submitDialog");
-const openBtn = document.getElementById("submitBtn");
-const closeBtn = document.getElementById("closeDialog");
+(function(){
+  // elements
+  const submitDialog = document.getElementById("submitDialog");
+  const trackForm = document.getElementById("trackForm");
+  const closeBtn = document.getElementById("closeDialog");
+  const submitBtn = document.getElementById("submitBtn"); 
 
-openBtn.addEventListener("click", () => {
-  dialog.style.display = "block";
-});
+  if (!submitDialog || !trackForm) {
+    console.warn("Popup elements missing (submitDialog or trackForm).");
+    return;
+  }
 
-closeBtn.addEventListener("click", () => {
-  dialog.style.display = "none";
-});
+  function openPopup() {
+    submitDialog.style.display = "flex";
+    const first = submitDialog.querySelector("input, textarea, button");
+    if (first) first.focus();
+  }
+  function closePopup() {
+    submitDialog.style.display = "none";
+  }
 
-window.addEventListener("click", (e) => {
-  if (e.target === dialog) dialog.style.display = "none";
+  if (submitBtn) {
+    submitBtn.addEventListener("click", function(e){
+      e.preventDefault();
+      openPopup();
+    });
+  }
+
+  if (closeBtn) closeBtn.addEventListener("click", closePopup);
+
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" || e.key === "Esc") {
+      if (submitDialog.style.display !== "none") closePopup();
+    }
+  });
+
+  submitDialog.addEventListener("click", function(e){
+    if (!e.target.closest("form")) closePopup();
+  });
+
+  trackForm.addEventListener("submit", function(e){
+    setTimeout(function(){
+      closePopup();
+      alert("✅ Track submitted!");
+    }, 500);
+  });
+})();
+
+// SECTION CONTENT (temporary filler text)
+const sectionContent = {
+  about: [
+    "Espina Sound Lab is where sonic identity is crafted.",
+    "Focused on clean, powerful low end and spacious detail.",
+    "Hybrid workflow for max creativity + precision."
+  ],
+  studio: [
+    "Hybrid analog/digital mastering chain.",
+    "Acoustically treated room for translation accuracy.",
+    "Monitoring chain designed for forensic listening."
+  ],
+  services: [
+    "Mixing & mastering for artists + labels.",
+    "Stem mastering & vocal production polishing.",
+    "Creative FX, analog saturation, restoration."
+  ],
+  faq: [
+    "Typical turnaround: 2–4 business days.",
+    "Revisions included — your satisfaction matters.",
+    "Uploads via secure transfer link."
+  ],
+  portfolio: [
+    "Examples coming soon.",
+    "Before/after shootouts with A/B player.",
+    "Selected releases & credits."
+  ],
+  testimonials: [
+    "“My mix never sounded this wide.”",
+    "“Clean loudness with no fatigue.”",
+    "“Professional, fast, and musical.”"
+  ]
+};
+
+// HANDLE CLICK TO SHOW SECTION
+document.querySelectorAll('.links a[data-section]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const sec = link.dataset.section;
+    const target = document.getElementById("section-" + sec);
+
+    // hide all other sections
+    document.querySelectorAll('.content-section').forEach(s => {
+      if (s !== target) s.style.display = "none";
+    });
+
+    // fill content (placeholder)
+    target.innerHTML = sectionContent[sec].map(t => `<p>${t}</p>`).join("");
+
+    // toggle visibility
+    target.style.display = (target.style.display === "block") ? "none" : "block";
+  });
 });
 </script>
 
