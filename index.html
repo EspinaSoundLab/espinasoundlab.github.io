@@ -11,18 +11,21 @@
 <style>
   /* Body with dark background and background logo */
   body {
-    font-family: "Silkscreen", Courier, monospace;
-    font-size: 16px; 
-    background: #000000 url('logo.png') no-repeat center 25%;
-    background-size:80% auto;
-    background-repeat: no-repeat;
-    color: #ffffff; /* white text */
-    margin: 10;
-    padding: 20px;
-    line-height: 1.7;
-    max-width: 700px;
-    position: relative;
-  }
+  font-family: "Silkscreen", Courier, monospace;
+  font-size: 16px; 
+  background: #000 url('logo.png') no-repeat center 45%;
+  background-size: 80% auto;
+  background-attachment: fixed; /* <- keep it fixed */
+  background-repeat: no-repeat;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+  line-height: 1.7;
+  max-width: 700px;
+  position: relative;
+  min-height: 100vh; /* fill the viewport */
+}
+
 
   /* Optional overlay for readability */
   body::after {
