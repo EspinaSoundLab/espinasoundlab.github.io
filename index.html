@@ -18,10 +18,11 @@
   background-attachment: fixed; /* <- keep it fixed */
   background-repeat: no-repeat;
   color: #fff;
-  margin: 0;
-  padding: 20px;
+  margin-left: 0;
+  margin-right: auto;
+  padding: 15px;
   line-height: 1.7;
-  max-width: 700px;
+  max-width: 90%;
   position: relative;
   min-height: 100vh; /* fill the viewport */
 }
@@ -69,17 +70,16 @@
   }
 
   /* ghost layer */
-  .links a::after {
+  /*.links a::after {
     content: attr(data-text);
     position: absolute;
     left: 0;
     top: 0;
     opacity: 0;
     transform: translate(2px, -2px);
-    text-shadow: -2px 2px rgb(7, 83, 130);
     pointer-events: none;
     transition: opacity 0.1s ease-in-out;
-  }
+  }*/
 
   .links a:hover::after {
     opacity: 1;
@@ -87,7 +87,7 @@
 
   /* tiny jitter flicker on hover for that glitch feel */
   .links a:hover {
-    animation: glitchFlicker 0.2s steps(2) 1;
+    animation: glitchFlicker 0.3s steps(2) 1;
     text-shadow: 0 0 1px #0ff, 0 0 12px #0ff;
   }
 
@@ -124,6 +124,26 @@
   p.tagline:hover {
     transform: translateX(0px);
   }
+
+  #topSubmitBtn {
+  position: fixed;
+  top: 40px;
+  right: 20px;
+  padding: 10px 18px;
+  background: #0ff;
+  color: #000;
+  border: 2px solid #0ff;
+  font-family: "Silkscreen", Courier, monospace;
+  cursor: pointer;
+  z-index: 200; /* above other elements */
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+#topSubmitBtn:hover {
+  background: #33ffff;
+  color: #000;
+}
+
 
   /* Submit Track Dialog matching your current site */
   #submitDialog {
@@ -202,15 +222,30 @@
   /* Sections below menu */
   .content-section {
     display: none;
-    margin-top: 20px;
-    padding: 15px 0;
+    margin-top: 0px;
+    padding: 1px 0;
     border-left: 2px solid #0ff;
     padding-left: 12px;
-    text-shadow: 0 0 5px #0ff;
+    text-shadow: 0 0 50px rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.2); /* semi-transparent black */
+}
   }
   .content-section p {
     margin: 5px 0;
   }
+
+  /* —————————————— Accordion link + section styles —————————————— */
+
+  .links a {
+  display:block;
+  font-size: 1em;
+  padding: 1px 0;
+}
+
+.content-section {
+  margin-bottom: 12px;
+}
+
 
   /* Mobile adjustments */
   @media (max-width: 600px) {
@@ -228,35 +263,47 @@
 
 </head>
 <body>
+
 <div class="bg-logo"></div>
 <h1>
   <img src="wordmark.png" alt="Espina Sound Lab">
 </h1>
+<button id="topSubmitBtn">Submit Your Music</button>
+
 
 <p class="tagline">Mixing and Mastering Studio</p>
 
-<!-- Menu -->
+<!-- Menu + sections -->
+
 <div class="links">
-  <a href="#" data-section="about" data-text="About">About</a>
-  <a href="#" data-section="studio" data-text="The Studio">The Studio</a>
-  <a href="#" data-section="services" data-text="Services">Services</a>
-  <a href="#" data-section="faq" data-text="FAQ / Workflow">FAQ / Workflow</a>
-  <a href="#" data-section="portfolio" data-text="Portfolio">Portfolio</a>
-  <a href="#" data-section="testimonials" data-text="Testimonials">Testimonials</a>
-  <a href="#" id="submitBtn" data-text="Submit Your Music">Submit Your Music</a>
-  <a href="mailto:hello@espinasoundlab.xyz" data-text="Contact">Contact</a>
+
+  <a href="#" data-section="about">About</a>
+  <div id="section-about" class="content-section"></div>
+
+  <a href="#" data-section="studio">The Studio</a>
+  <div id="section-studio" class="content-section"></div>
+
+  <a href="#" data-section="services">Services</a>
+  <div id="section-services" class="content-section"></div>
+
+  <a href="#" data-section="faq">FAQ / Workflow</a>
+  <div id="section-faq" class="content-section"></div>
+
+  <a href="#" data-section="portfolio">Portfolio</a>
+  <div id="section-portfolio" class="content-section"></div>
+
+  <a href="#" data-section="testimonials">Testimonials</a>
+  <div id="section-testimonials" class="content-section"></div>
+
+  <a href="#" id="submitBtn">Submit Your Music</a>
+  <a href="mailto:hello@espinasoundlab.xyz">Contact</a>
+
 </div>
 
-<!-- Sections -->
-<div id="section-about" class="content-section"></div>
-<div id="section-studio" class="content-section"></div>
-<div id="section-services" class="content-section"></div>
-<div id="section-faq" class="content-section"></div>
-<div id="section-portfolio" class="content-section"></div>
-<div id="section-testimonials" class="content-section"></div>
 
 <p style="margin-top:40px;">
 © Espina Sound Lab
+📍 Kreuzberg, Berlin
 </p>
 
 <!-- Submit Track Dialog -->
@@ -333,6 +380,14 @@
       openPopup();
     });
   }
+const topSubmitBtn = document.getElementById("topSubmitBtn");
+
+if(topSubmitBtn){
+  topSubmitBtn.addEventListener("click", function(e){
+    e.preventDefault();
+    openPopup(); // Re-uses the same popup
+  });
+}
 
   if (closeBtn) closeBtn.addEventListener("click", closePopup);
 
@@ -362,9 +417,8 @@ const sectionContent = {
     "Hybrid workflow for max creativity + precision."
   ],
   studio: [
-    "Hybrid analog/digital mastering chain.",
-    "Acoustically treated room for translation accuracy.",
-    "Monitoring chain designed for forensic listening."
+    "Located in the heart of Berlin, Espina Sound Lab operates from a professionally optimised room with almost perfect representation of the full audio spectrum. Powered by Kii Audio Three’s together with the BXT extensions offering one of the most advanced and accurate sonic experiences to help deliver the best results possible. The studio is completed with Merging Anubis and HAPI converters for high end DA and AD conversion. We work with a hybrid approach, combining the best of both analog and digital worlds. Our most beloved tools are Terry CEQ, DMG suite, Tone Projects, FabFilter…",
+  
   ],
   services: [
     "Mixing & mastering for artists + labels.",
