@@ -1,564 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Espina Sound Lab</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
-@font-face {
-  font-family: 'Nultien-Regular';
-  src: url('fonts/Nultien-Regular.otf');
-}
-@font-face {
-  font-family: 'Euro';
-  src: url('fonts/EurostileExt-Med.otf');
-}
-@font-face {
-  font-family: 'Utara';
-  src: url('fonts/Utara-Regular.woff2');
-}
-@font-face {
-  font-family: 'steps';
-  src: url('fonts/Steps-Mono-Thin.otf');
-}
-/* Body with dark background and background logo */
-body {
-  font-family: "Silkscreen", Courier, monospace;
-  font-size: 16px; 
-  background: #000 url('logo f5.png') no-repeat center 45%;
-  background-size: 80% auto;
-  background-attachment: fixed;
-  color: #fff;
-  margin-left: 0;
-  margin-right: auto;
-  padding: 15px;
-  line-height: 1.7;
-  max-width: 90%;
-  position: relative;
-  min-height: 100vh;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espina Sound Lab</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+    @font-face { font-family: 'Nultien-Regular'; src: url('fonts/Nultien-Regular.otf'); font-display: swap; }
+    @font-face { font-family: 'Euro'; src: url('fonts/EurostileExt-Med.otf'); font-display: swap; }
+    @font-face { font-family: 'Utara'; src: url('fonts/Utara-Regular.woff2'); font-display: swap; }
+    @font-face { font-family: 'steps'; src: url('fonts/Steps-Mono-Thin.otf'); font-display: swap; }
 
-/* Optional overlay */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.1);
-  z-index: -1;
-}
+    :root {
+      --c-bg: #000; --c-fg: #fff; --c-accent: #0ff; --c-accent-hover: #33ffff;
+      --c-muted: rgba(255,255,255,0.976);
+      --shadow-strong: 0 0 30px rgba(0,0,0,0.4); --shadow-accent: 0 0 15px var(--c-accent);
+      --border-1: 1px solid var(--c-accent); --border-2: 2px solid var(--c-accent);
+      --space-1: 5px; --space-2: 10px; --space-3: 12px; --space-4: 15px;
+      --radius-1: 6px; --font-ui: "Silkscreen", Courier, monospace;
+      --transition-fast: 0.2s ease; --transition-med: 0.4s ease;
 
-/* Wordmark header */
-h1 {
-  font-size: 0; 
-  margin-bottom: 5px;
-  margin-top: 0;
-  text-align: left;
-}
-h1 img {
-  display: block;
-  max-width: 350px;
-  width: 100%;
-  height: auto;
-}
+      /* Will be set by JS to the widest button width */
+      --menu-button-width: auto;
+    }
 
-/* No max-width cap for large screens to allow full expansion */
-@media (min-width: 1200px) {
-  body {
-    padding: 15px 15px 15px; /* Keep 0 left padding */
-  }
-}
-/* Links / Menu */
-a {
-  color: #fff;
-  text-decoration: none;
-}
-/* Hover effect for section titles */
-.links a {
-  position: relative;
-  display: block;
-  text-transform: uppercase;
-  margin: 5px 0;          /* keeps your previous spacing */
-  padding: 5px 20px;     /* adjust padding for effect */
-  text-decoration: none;
-  color: #fff;            /* original link color */
-  font-family: "Silkscreen", monospace;
-  font-size: 1em;
-  font-weight: 600;
-  transition: 0.2s;
-  z-index: 1;
-}
+    body {
+      font-family: var(--font-ui); font-size: 16px; color: var(--c-fg);
+      background: var(--c-bg) url('logo f5.png') no-repeat center 45%;
+      background-size: 80% auto; background-attachment: fixed;
+      margin: 0; padding: var(--space-4); line-height: 1.7;
+      max-width: 90%; position: relative; min-height: 100vh;
+    }
+    body::after { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.1); z-index: -1; }
 
-.links a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-top: 2px solid #0ff;
-  border-bottom: 2px solid #0ff;
-  transform: scaleY(2);
-  transform-origin: center top;  /* <-- smooth scaling */
-  opacity: 0;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-}
+    h1 { font-size: 0; margin: 0 0 var(--space-1) 0; text-align: left; }
+    h1 img { display: block; max-width: 350px; width: 100%; height: auto; }
+    a { color: var(--c-fg); text-decoration: none; }
 
-.links a::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #0ff;
-  transform: scale(0);
-  transform-origin: center center; /* <-- smooth scaling */
-  opacity: 0;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  z-index: -1;
-}
+    .bg-logo {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 60%; height: auto; background: url('logo.png') no-repeat center/contain;
+      opacity: .2; z-index: -1; animation: pulseBg 3s ease-in-out infinite;
+    }
+    @keyframes pulseBg { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.2}50%{transform:translate(-50%,-50%) scale(1.05);opacity:.3} }
 
+    .tagline { display: inline-block; font-size: 1em; color: var(--c-muted); margin: 10px 0 30px .4%; text-align: left; }
 
-.links a:hover {
-  color: #000; /* text color on hover */
-}
+    #topSubmitBtn {
+      position: fixed; top: 40px; right: 20px; padding: 10px 18px; background: var(--c-accent);
+      color: #000; border: var(--border-2); font-family: var(--font-ui); cursor: pointer; z-index: 200; font-size: 1em;
+      transition: transform .15s ease, background var(--transition-slow), color var(--transition-slow);
+    }
+    #topSubmitBtn:hover { background: var(--c-accent-hover); }
+    #topSubmitBtn:active { transform: scale(0.92); }
 
-.links a:hover::before {
-  transform: scaleY(1);
-  opacity: 1;
-}
+    /* ===========================
+       LEFT-PINNED MENU, BUTTON BOX
+       =========================== */
+    /* Keep your original left alignment: no centering wrappers used */
+    .menu {
+      display: block;           /* left-pinned in normal flow */
+    }
 
-.links a:hover::after {
-  transform: scale(1);
-  opacity: 1;
-}
+    /* Each item wraps the link and clips hover layers */
+    .menu-item {
+      display: block;
+      overflow: hidden;         /* clip ::before/::after hover animation to this box */
+      margin: var(--space-1) 0;
+      width: var(--menu-button-width); /* set uniformly by JS */
+      max-width: 100%;
+    }
 
+    /* Anchor fills the item width; visuals preserved */
+    .menu .menu-item > a {
+      position: relative;
+      display: block;
+      width: 100%;              /* fill the bounding box */
+      box-sizing: border-box;
+      text-transform: uppercase;
+      padding: var(--space-1) 20px;
+      color: var(--c-fg);
+      font-family: var(--font-ui);
+      font-size: 1em;
+      font-weight: 600;
+      transition: color var(--transition-fast), text-shadow var(--transition-fast), transform 0.15s ease;
+      z-index: 0;
+    }
 
-  /* ghost layer */
-  /*.links a::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    transform: translate(2px, -2px);
-    pointer-events: none;
-    transition: opacity 0.1s ease-in-out;
-  }*/
+    /* Hover animation layers, now confined by .menu-item overflow */
+    .menu .menu-item > a::before,
+    .menu .menu-item > a::after {
+      content: '';
+      position: absolute;
+      left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      transition: transform var(--transition-med), opacity var(--transition-med);
+      pointer-events: none;     /* hover area = anchor only */
+    }
+    .menu .menu-item > a::before {
+      top: 0;
+      border-top: 2px solid var(--c-accent);
+      border-bottom: 2px solid var(--c-accent);
+      transform: scaleY(2);
+      transform-origin: center top;
+    }
+    .menu .menu-item > a::after {
+      top: 2px;
+      background-color: var(--c-accent);
+      transform: scale(0);
+      transform-origin: center center;
+      z-index: -1;
+    }
+    .menu .menu-item > a:hover {
+      color: #000;
+      animation: glitchFlicker .3s steps(2) 1;
+      text-shadow: 0 0 1px var(--c-accent), 0 0 12px var(--c-accent);
+    }
+    .menu .menu-item > a:hover::before { transform: scaleY(1); opacity: 1; }
+    .menu .menu-item > a:hover::after  { transform: scale(1);  opacity: 1; }
 
+    @keyframes glitchFlicker { 0%{transform:translateX(0)}50%{transform:translateX(1px)}100%{transform:translateX(0)} }
 
-  }
+    /* Accordion content panels (unchanged visuals/behavior) */
+    .content-section {
+      display: none;
+      margin: 0 0 var(--space-3) 0;
+      padding: 15px 25px 15px 12px;
+      border-left: var(--border-2);
+      background: rgba(0, 0, 0, 0.2);
+      width: 100vw;             /* can be full width; doesn't affect buttons */
+      max-width: none; box-sizing: border-box;
+    }
+    .content-section p { margin: 5px 0; }
+    #section-studio p { text-align: left; }
+    #section-studio img { display: block; margin: 20px auto; }
 
-  /* tiny jitter flicker on hover for that glitch feel */
-  .links a:hover {
-    animation: glitchFlicker 0.3s steps(2) 1;
-    text-shadow: 0 0 1px #0ff, 0 0 12px #0ff;
-  }
+    .studio-image {
+      width: 100%; max-width: 500px; height: auto; display: block;
+      margin: 20px auto; border-radius: var(--radius-1); box-shadow: var(--shadow-strong);
+    }
 
-  @keyframes glitchFlicker {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(1px); }
-    100% { transform: translateX(0); }
-  }
+    footer {
+      position: fixed; bottom: 0; left: 0; width: 100%; text-align: center;
+      padding: 10px 0; background: rgba(0,0,0,0.7); color: var(--c-fg);
+      font-family: var(--font-ui); z-index: -1;
+      font-size: 0.8em;
+    }
 
-/* Background logo pulse */
-.bg-logo {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60%;
-  height: auto;
-  background: url('logo.png') no-repeat center center;
-  background-size: contain;
-  opacity: 0.2;
-  z-index: -1;
-  animation: pulseBg 3s ease-in-out infinite;
-}
-@keyframes pulseBg {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
-  50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.3; }
-}
+    /* Modal */
+    #submitDialog {
+      display: none; position: fixed; inset: 0; width: 100vw; height: 100vh;
+      justify-content: center; align-items: center; background: rgba(0,0,0,0.6); z-index: 100;
+    }
+    #submitDialog form {
+      background: var(--c-bg); color: var(--c-fg); border: var(--border-2);
+      padding: 20px; max-width: 400px; width: 90vw; font-family: var(--font-ui);
+      box-shadow: var(--shadow-accent); text-align: left; max-height: 90vh; overflow-y: auto;
+      box-sizing: border-box; border-radius: var(--radius-1);
+    }
+    #submitDialog.show + #topSubmitBtn,
+    #submitDialog.show ~ #topSubmitBtn { display: none; }
+    #submitDialog input, #submitDialog textarea {
+      width: 100%; padding: 8px; margin: 5px 0 15px 0; background: var(--c-bg);
+      border: var(--border-1); color: var(--c-fg); font-family: var(--font-ui); box-sizing: border-box;
+    }
+    #submitDialog input::placeholder, #submitDialog textarea::placeholder { color: #aaa; opacity: 0.7; }
+    #submitDialog button {
+      margin-right: 10px; padding: 8px 15px; background: var(--c-accent);
+      border: none; color: #000; cursor: pointer; font-family: var(--font-ui);
+      font-size: 1em; transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    #submitDialog button:hover { background: var(--c-accent-hover); }
+    #submitDialog .two-fields { display: flex; gap: 10px; margin-bottom: 15px; }
+    #submitDialog .two-fields > div { flex: 1; }
 
-p.tagline {
-  display: inline-block;
-  /* margin-bottom: 85px; /* increases space before sections */
+    /* Mobile guards */
+    @media (max-width: 600px) {
+      body { padding: 40px 15px; }
+      body::after { background: rgba(0,0,0,0.5); }
+      h1 img { max-width: 200px; }
 
-}
+      /* Allow wrapping if a label is long; still clipped by .menu-item */
+      .menu .menu-item > a { white-space: normal; text-align: left; }
 
-/* Top-right submit button */
-#topSubmitBtn {
-  position: fixed;
-  top: 40px;
-  right: 20px;
-  padding: 10px 18px;
-  background: #0ff;
-  color: #000;
-  border: 2px solid #0ff;
-  font-family: "Silkscreen", Courier, monospace;
-  cursor: pointer;
-  z-index: 200;
-  transition: background 0.2s ease, color 0.2s ease;
-    font-size: 1em; /* Base size */
-transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
-
-}
-#topSubmitBtn:hover {
-  background: #33ffff;
-  color: #000;
-}
-#topSubmitBtn:active {
-  transform: scale(0.92);
-}
-
-/* Submit Track Dialog */
-#submitDialog {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.6);
-  z-index: 100;
-}
-#submitDialog form {
-  background: #000;
-  color: #fff;
-  border: 2px solid #0ff;
-  padding: 20px;
-  max-width: 400px;  /* desktop max */
-  width: 90vw;       /* relative to viewport width */
-  font-family: "Silkscreen", Courier, monospace;
-  box-shadow: 0 0 15px #0ff;
-  text-align: left;
-  max-height: 90vh;  /* limit height on mobile */
-  overflow-y: auto;  /* allow scrolling if content too tall */
-  box-sizing: border-box;
-  border-radius: 6px;
-}
-
-/* Hide button when popup is open */
-#submitDialog.show + #topSubmitBtn,
-#submitDialog.show ~ #topSubmitBtn {
-  display: none;
-}
-
-
-#submitDialog input,
-#submitDialog textarea {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0 15px 0;
-  background: #000;
-  border: 1px solid #0ff;
-  color: #fff;
-  font-family: "Silkscreen", Courier, monospace;
-  box-sizing: border-box;
-}
-#submitDialog input::placeholder,
-#submitDialog textarea::placeholder {
-  color: #aaa;
-  opacity: 0.7;
-}
-#submitDialog button {
-  margin-right: 10px;
-  padding: 8px 15px;
-  background: #0ff;
-  border: none;
-  color: #000;
-  cursor: pointer;
- font-family: "Silkscreen", Courier, monospace; /* force same font as body */
-  font-size: 1em; /* adjust if needed */
-}
-#submitDialog button:hover {
-  background: #33ffff;
-}
-
-/* Two fields side by side */
-#submitDialog .two-fields {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-#submitDialog .two-fields > div {
-  flex: 1;
-}
-
-/* Accordion / Sections */
-.content-section {
-  display: none;
-  margin-top: 0;
-  padding: 15px 25px;
-  border-left: 2px solid #0ff;
-  padding-left: 12px;
-  background: rgba(0, 0, 0, 0.2);
-  margin-bottom: 12px;
-  width: 100vw;          /* full width of parent */
-
-  max-width: none;      /* remove inherited max-width from body */
-  box-sizing: border-box; /* keep padding inside width */
-}
-.content-section p {
-  margin: 5px 0;
-}
-
-#section-studio p {
-  text-align: left;
-}
-
-#section-studio img {
-  display: block;
-  margin: 20px auto;
-}
-
-
-/* Studio image style */
-
-.studio-image {
-  width: 100%;         /* fills container width */
-  max-width: 500px;    /* limits maximum size */
-  height: auto;        /* keeps aspect ratio */
-  display: block;
-  margin: 20px auto;   /* centers the image and adds spacing */
-  border-radius: 6px;  /* rounded corners */
-  box-shadow: 0 0 30px rgba(0,0,0,0.4); /* subtle shadow */
-}
-
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  padding: 10px 0;
-  background: rgba(0,0,0,0.7); /* optional semi-transparent background */
-  color: #fff;
-  font-family: "Silkscreen", monospace;
-  z-index: -1;
-}
-
-
-/* Mobile adjustments */
-@media (max-width: 600px) {
-  body {
-    padding: 40px 15px;
-  }
-
-  body::after {
-    background: rgba(0,0,0,0.5);
-  }
-
-  h1 img {
-    max-width: 200px;
-  }
-
-  /* ✅ Scale Submit button on mobile */
-  #topSubmitBtn {
-    top: 12px;
-    right: 12px;
-    padding: 6px 12px;
-    font-size: 0.8em;
-    border-width: 2px;
-    transform: scale(0.9);
-  }
-}
-p.tagline {
-  font-family: 'Silkscreen', monospace; /* or your custom font */
-  font-size: 1em;      /* change size */
-  color: rgba(255, 255, 255, 0.976);           /* change color */
-  text-transform: ; /* make all caps */
-  font-weight: normal;      /* bold */
-  letter-spacing: 0px;    /* spacing between letters */
-  margin-top: 10px;       /* space above */
-  margin-bottom: 30px;    /* space below */
-  margin-left: 0.4%;
-  text-align: center;     /* center on page */
-}
-
-
-</style>
+      #topSubmitBtn {
+        top: 12px; right: 12px; padding: 6px 12px; font-size: .8em; border-width: 2px; transform: scale(.9);
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="bg-logo" aria-hidden="true"></div>
+  <h1><img src="wordmark.png" alt="Espina Sound Lab" /></h1>
+  <button id="topSubmitBtn" aria-haspopup="dialog" aria-controls="submitDialog">Submit Your Music</button>
+  <p class="tagline">Mixing and Mastering Studio</p>
 
-<div class="bg-logo"></div>
+  <!-- LEFT-PINNED MENU: same structure, each link wrapped in .menu-item -->
+  <nav class="menu" aria-label="Primary">
+    <div class="menu-item"><a href="#" data-section="about">About</a></div>
+    <div id="section-about" class="content-section" role="region" aria-live="polite"></div>
 
-<h1><img src="wordmark.png" alt="Espina Sound Lab"></h1>
-<button id="topSubmitBtn">Submit Your Music</button>
-<p class="tagline">Mixing and Mastering Studio </p>
+    <div class="menu-item"><a href="#" data-section="studio">The Studio</a></div>
+    <div id="section-studio" class="content-section" role="region" aria-live="polite"></div>
 
+    <div class="menu-item"><a href="#" data-section="services">Services</a></div>
+    <div id="section-services" class="content-section" role="region" aria-live="polite"></div>
 
-<!-- Menu + Sections -->
-<div class="links">
-  <a href="#" data-section="about">About</a>
-  <div id="section-about" class="content-section"></div>
+    <div class="menu-item"><a href="#" data-section="faq">FAQ / Workflow</a></div>
+    <div id="section-faq" class="content-section" role="region" aria-live="polite"></div>
 
-  <a href="#" data-section="studio">The Studio</a>
-  <div id="section-studio" class="content-section"></div>
+    <div class="menu-item"><a href="#" data-section="portfolio">Portfolio</a></div>
+    <div id="section-portfolio" class="content-section" role="region" aria-live="polite"></div>
 
-  <a href="#" data-section="services">Services</a>
-  <div id="section-services" class="content-section"></div>
+    <div class="menu-item"><a href="#" data-section="testimonials">Testimonials</a></div>
+    <div id="section-testimonials" class="content-section" role="region" aria-live="polite"></div>
 
-  <a href="#" data-section="faq">FAQ / Workflow</a>
-  <div id="section-faq" class="content-section"></div>
+    <div class="menu-item"><a href="#" id="submitBtn">Submit Your Music</a></div>
+    <div class="menu-item"><a href="mailto:hello@espinasoundlab.xyz">Contact</a></div>
+  </nav>
 
-  <a href="#" data-section="portfolio">Portfolio</a>
-  <div id="section-portfolio" class="content-section"></div>
+  <footer>© Espina Sound Lab 📍 Kreuzberg, Berlin</footer>
 
-  <a href="#" data-section="testimonials">Testimonials</a>
-  <div id="section-testimonials" class="content-section"></div>
+  <!-- Submit Track Dialog -->
+  <div id="submitDialog" role="dialog" aria-modal="true" aria-label="Track submission">
+    <form id="trackForm" action="https://formspree.io/f/mvgveynq" method="POST" target="_blank">
+      <h2 id="submit-heading">Track Submission</h2>
+      <p>Send your project details and a transfer link. We’ll get back within 1–2 business days.</p>
 
-  <a href="#" id="submitBtn">Submit Your Music</a>
-  <a href="mailto:hello@espinasoundlab.xyz">Contact</a>
-</div>
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required />
 
-<footer>
-  © Espina Sound Lab 📍 Kreuzberg, Berlin
-</footer>
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" required />
 
-
-<!-- Submit Track Dialog -->
-<div id="submitDialog">
-  <form id="trackForm" action="https://formspree.io/f/mvgveynq" method="POST" target="_blank">
-    <h2>Track Submission</h2>
-    <label for="name">Full Name:</label>
-    <input type="text" id="name" name="name" required>
-
-    <label for="address">Address:</label>
-    <input type="text" id="address" name="address" required>
-
-    <div class="two-fields">
-      <div>
-        <label for="city">City:</label>
-        <input type="text" id="city" name="city" required>
+      <div class="two-fields">
+        <div>
+          <label for="city">City:</label>
+          <input type="text" id="city" name="city" required />
+        </div>
+        <div>
+          <label for="zip">ZIP Code:</label>
+          <input type="text" id="zip" name="zip" required />
+        </div>
       </div>
-      <div>
-        <label for="zip">ZIP Code:</label>
-        <input type="text" id="zip" name="zip" required>
+
+      <div class="two-fields">
+        <div>
+          <label for="country">Country:</label>
+          <input type="text" id="country" name="country" required />
+        </div>
+        <div>
+          <label for="vat">VAT Number:</label>
+          <input type="text" id="vat" name="vat" />
+        </div>
       </div>
-    </div>
 
-    <div class="two-fields">
-      <div>
-        <label for="country">Country:</label>
-        <input type="text" id="country" name="country" required>
-      </div>
-      <div>
-        <label for="vat">VAT Number:</label>
-        <input type="text" id="vat" name="vat">
-      </div>
-    </div>
+      <label for="tracklink">Track Link:</label>
+      <input type="url" id="tracklink" name="tracklink" placeholder="WeTransfer / SwissTransfer" required />
 
-    <label for="tracklink">Track Link:</label>
-    <input type="url" id="tracklink" name="tracklink" placeholder="WeTransfer / SwissTransfer" required>
+      <label for="notes">Additional Notes:</label>
+      <textarea id="notes" name="notes" rows="4" placeholder="Mix references, goals, deadlines…"></textarea>
 
-    <label for="notes">Additional Notes:</label>
-    <textarea id="notes" name="notes"></textarea>
+      <button type="submit">Submit</button>
+      <button type="button" id="closeDialog">Cancel</button>
+    </form>
+  </div>
 
-    <button type="submit">Submit</button>
-    <button type="button" id="closeDialog">Cancel</button>
-  </form>
-</div>
+  <script>
+    // =========================
+    // MENU WIDTH NORMALIZATION
+    // =========================
+    // Measure widest anchor and set a CSS variable so all buttons share that width.
+    // Keeps the menu pinned left, prevents any reflow "jump" on expand.
+    function normalizeMenuWidths() {
+      const items = Array.from(document.querySelectorAll('.menu .menu-item > a'));
+      if (!items.length) return;
 
-<script>
-// POPUP HANDLING
-(function(){
-  const submitDialog = document.getElementById("submitDialog");
-  const trackForm = document.getElementById("trackForm");
-  const closeBtn = document.getElementById("closeDialog");
-  const submitBtn = document.getElementById("submitBtn");
-  const topSubmitBtn = document.getElementById("topSubmitBtn");
+      // Reset any previous width to measure natural size
+      document.documentElement.style.removeProperty('--menu-button-width');
 
-  function openPopup() {
-  submitDialog.style.display = "flex";
-  submitDialog.classList.add("show");
-  
-  // Hide the button while popup is open
-  if(topSubmitBtn) topSubmitBtn.style.display = "none";
-  if(submitBtn) submitBtn.style.display = "none";
-  
-  const first = submitDialog.querySelector("input, textarea, button");
-  if(first) first.focus();
-}
+      // Temporarily measure with shrink-to-fit sizing
+      items.forEach(a => {
+        a.style.width = 'auto';
+        a.style.display = 'inline-block';
+      });
 
-function closePopup() {
-  submitDialog.style.display = "none";
-  submitDialog.classList.remove("show");
-  
-  // Show the button again
-  if(topSubmitBtn) topSubmitBtn.style.display = "block";
-  if(submitBtn) submitBtn.style.display = "block";
-}
+      const max = Math.ceil(
+        Math.max(...items.map(a => a.getBoundingClientRect().width))
+      );
 
+      // Restore block layout
+      items.forEach(a => { a.style.display = 'block'; });
 
-
-  [submitBtn, topSubmitBtn].forEach(btn => {
-    if(btn) btn.addEventListener("click", e => { e.preventDefault(); openPopup(); });
-  });
-
-  if(closeBtn) closeBtn.addEventListener("click", closePopup);
-  document.addEventListener("keydown", e => { if(e.key==="Escape") closePopup(); });
-  submitDialog.addEventListener("click", e => { if(!e.target.closest("form")) closePopup(); });
-  trackForm.addEventListener("submit", () => { setTimeout(()=>{ closePopup(); alert("✅ Track submitted!"); }, 500); });
-})();
-
-// SECTION CONTENT
-const sectionContent = {
-  about: [
-    "Espina Sound Lab is where sonic identity is crafted.",
-    "Focused on clean, powerful low end and spacious detail.",
-    "Hybrid workflow for max creativity + precision."
-  ],
-  studio: [
-    "Located in the heart of Berlin, Espina Sound Lab operates from a professionally optimised room with almost perfect representation of the full audio spectrum. Powered by Kii Audio Three’s together with the BXT extensions offering one of the most advanced and accurate sonic experiences to help deliver the best results possible. The studio is completed with Merging Anubis and HAPI converters for high end DA and AD conversion. We work with a hybrid approach, combining the best of both analog and digital worlds. Our most beloved tools are Terry CEQ, DMG suite, Tone Projects, FabFilter…",
-    `<img src="images/studiopictest.webp" alt="Espina Sound Lab Studio" class="studio-image">`
-  ],
-  services: [
-    "Mixing & mastering for artists + labels.",
-    "Stem mastering & vocal production polishing.",
-    "Creative FX, analog saturation, restoration."
-  ],
-  faq: [
-    "Typical turnaround: 2–4 business days.",
-    "Revisions included — your satisfaction matters.",
-    "Uploads via secure transfer link."
-  ],
-  portfolio: [
-    "Examples coming soon.",
-    "Before/after shootouts with A/B player.",
-    "Selected releases & credits."
-  ],
-  testimonials: [
-    "“My mix never sounded this wide.”",
-    "“Clean loudness with no fatigue.”",
-    "“Professional, fast, and musical.”"
-  ]
-};
-
-// ACCORDION MENU HANDLING
-document.querySelectorAll('.links a[data-section]').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const sec = link.dataset.section;
-    const target = document.getElementById("section-" + sec);
-    const isVisible = target.style.display === "block";
-
-    // hide all
-    document.querySelectorAll('.content-section').forEach(s => s.style.display = "none");
-
-    if(!isVisible){
-      target.innerHTML = sectionContent[sec]
-        .map(item => item.startsWith("<img") ? item : `<p>${item}</p>`)
-        .join("");
-      target.style.display = "block";
+      // Apply uniform width
+      document.documentElement.style.setProperty('--menu-button-width', max + 'px');
     }
-  });
-});
-</script>
 
+    // Run after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', normalizeMenuWidths);
+    } else {
+      normalizeMenuWidths();
+    }
+
+    // Optional: re-run after all resources (fonts) load for accuracy
+    window.addEventListener('load', () => {
+      normalizeMenuWidths();
+    });
+
+    // Debounced resize handler in case of viewport/font size changes
+    let _mwTO;
+    window.addEventListener('resize', () => {
+      clearTimeout(_mwTO);
+      _mwTO = setTimeout(normalizeMenuWidths, 150);
+    });
+
+    // =========================
+    // ACCORDION + MODAL LOGIC
+    // =========================
+    (function(){
+      const submitDialog   = document.getElementById("submitDialog");
+      const trackForm      = document.getElementById("trackForm");
+      const closeBtn       = document.getElementById("closeDialog");
+      const submitBtn      = document.getElementById("submitBtn");
+      const topSubmitBtn   = document.getElementById("topSubmitBtn");
+
+      function toggleModal(show) {
+        submitDialog.style.display = show ? "flex" : "none";
+        submitDialog.classList.toggle("show", show);
+        if (topSubmitBtn) topSubmitBtn.style.display = show ? "none" : "block";
+        if (submitBtn)    submitBtn.style.display    = show ? "none" : "block";
+      }
+      function openPopup() {
+        toggleModal(true);
+        const first = submitDialog.querySelector("input, textarea, button");
+        if (first) first.focus();
+      }
+      function closePopup() { toggleModal(false); }
+
+      [submitBtn, topSubmitBtn].forEach(btn => {
+        if (btn) btn.addEventListener("click", e => { e.preventDefault(); openPopup(); });
+      });
+      if (closeBtn) closeBtn.addEventListener("click", closePopup);
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closePopup(); });
+      submitDialog.addEventListener("click", e => { if (!e.target.closest("form")) closePopup(); });
+      trackForm.addEventListener("submit", () => {
+        setTimeout(() => { closePopup(); alert("✅ Track submitted!"); }, 500);
+      });
+    })();
+
+    const sectionContent = {
+      about: [
+        "Espina Sound Lab is where sonic identity is crafted.",
+        "Focused on clean, powerful low end and spacious detail.",
+        "Hybrid workflow for max creativity + precision."
+      ],
+      studio: [
+        "Located in the heart of Berlin, Espina Sound Lab operates from a professionally optimised room with almost perfect representation of the full audio spectrum. Powered by Kii Audio Three’s together with the BXT extensions offering one of the most advanced and accurate sonic experiences to help deliver the best results possible. The studio is completed with Merging Anubis and HAPI converters for high end DA and AD conversion. We work with a hybrid approach, combining the best of both analog and digital worlds. Our most beloved tools are Terry CEQ, DMG suite, Tone Projects, FabFilter…",
+        `<img src="images/studiopictest.webp" alt="Espina Sound Lab Studio" class="studio-image">`
+      ],
+      services: [
+        "Mixing & mastering for artists + labels.",
+        "Stem mastering & vocal production polishing.",
+        "Creative FX, analog saturation, restoration."
+      ],
+      faq: [
+        "Typical turnaround: 2–4 business days.",
+        "Revisions included — your satisfaction matters.",
+        "Uploads via secure transfer link."
+      ],
+      portfolio: [
+        "Examples coming soon.",
+        "Before/after shootouts with A/B player.",
+        "Selected releases & credits."
+      ],
+      testimonials: [
+        "“My mix never sounded this wide.”",
+        "“Clean loudness with no fatigue.”",
+        "“Professional, fast, and musical.”"
+      ]
+    };
+
+    // Accordion toggle (unchanged)
+    document.querySelectorAll('.menu a[data-section]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const sec = link.dataset.section;
+        const target = document.getElementById("section-" + sec);
+        const isVisible = target.style.display === "block";
+
+        // Hide all sections
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = "none");
+
+        // Show the clicked one if it was hidden
+        if (!isVisible) {
+          target.innerHTML = sectionContent[sec]
+            .map(item => item.startsWith("<img") ? item : `<p>${item}</p>`)
+            .join("");
+          target.style.display = "block";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
-
