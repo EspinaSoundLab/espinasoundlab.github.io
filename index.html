@@ -185,11 +185,15 @@ p.tagline {
   z-index: 200;
   transition: background 0.2s ease, color 0.2s ease;
     font-size: 1em; /* Base size */
+transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 
 }
 #topSubmitBtn:hover {
   background: #33ffff;
   color: #000;
+}
+#topSubmitBtn:active {
+  transform: scale(0.92);
 }
 
 /* Submit Track Dialog */
@@ -299,22 +303,26 @@ p.tagline {
   body {
     padding: 40px 15px;
   }
+
   body::after {
     background: rgba(0,0,0,0.5);
   }
+
   h1 img {
     max-width: 200px;
   }
-}
-@media (max-width: 600px) {
+
+  /* ✅ Scale Submit button on mobile */
   #topSubmitBtn {
     top: 12px;
     right: 12px;
     padding: 6px 12px;
-    font-size: 0.8em;  /* slightly smaller text */
+    font-size: 0.8em;
     border-width: 2px;
+    transform: scale(0.9);
   }
 }
+
 
 </style>
 </head>
