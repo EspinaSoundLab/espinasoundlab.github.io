@@ -12,10 +12,8 @@
     @font-face { font-family: 'steps'; src: url('fonts/Steps-Mono-Thin.otf'); font-display: swap; }
     @font-face { font-family: 'pilcrow'; src: url('fonts/PilcrowRounded-Regular.woff'); font-display: swap; }
     @font-face { font-family: 'pilcrowm'; src: url('fonts/PilcrowRounded-Medium.woff'); font-display: swap; }
-
     @font-face { font-family: 'supreme'; src: url('fonts/Supreme-Regular.woff'); font-display: swap; }
-        @font-face { font-family: 'switzer'; src: url('fonts/Switzer-Regular.woff'); font-display: swap; }
-
+    @font-face { font-family: 'switzer'; src: url('fonts/Switzer-Regular.woff'); font-display: swap; }
 
     :root {
       --c-bg: #000; --c-fg: #fff; --c-accent: #0ff; --c-accent-hover: #33ffff;
@@ -63,25 +61,20 @@
     /* ===========================
        LEFT-PINNED MENU, BUTTON BOX
        =========================== */
-    /* Keep your original left alignment: no centering wrappers used */
-    .menu {
-      display: block;           /* left-pinned in normal flow */
-    }
+    .menu { display: block; }
 
-    /* Each item wraps the link and clips hover layers */
     .menu-item {
       display: block;
-      overflow: hidden;         /* clip ::before/::after hover animation to this box */
+      overflow: hidden;
       margin: var(--space-1) 0;
-      width: var(--menu-button-width); /* set uniformly by JS */
+      width: var(--menu-button-width);
       max-width: 100%;
     }
 
-    /* Anchor fills the item width; visuals preserved */
     .menu .menu-item > a {
       position: relative;
       display: block;
-      width: 100%;              /* fill the bounding box */
+      width: 100%;
       box-sizing: border-box;
       text-transform: uppercase;
       padding: var(--space-1) 20px;
@@ -93,7 +86,6 @@
       z-index: 0;
     }
 
-    /* Hover animation layers, now confined by .menu-item overflow */
     .menu .menu-item > a::before,
     .menu .menu-item > a::after {
       content: '';
@@ -101,7 +93,7 @@
       left: 0; width: 100%; height: 100%;
       opacity: 0;
       transition: transform var(--transition-med), opacity var(--transition-med);
-      pointer-events: none;     /* hover area = anchor only */
+      pointer-events: none;
     }
     .menu .menu-item > a::before {
       top: 0;
@@ -134,20 +126,18 @@
       padding: 15px 25px 15px 12px;
       border-left: 4px solid var(--c-accent);
       border-right: 8px solid var(--c-accent);
-
       background: rgba(0, 0, 0, 0.2);
-      width: 100vw;             /* can be full width; doesn't affect buttons */
+      width: 100vw;             /* NOTE: retained, per current site; see critique to consider 100% */
       max-width: none; box-sizing: border-box;
     }
     .content-section p { margin: 0px 0; }
     #section-studio img { display: block; margin: 20px auto; }
-    
     .content-section {
-  font-family: 'pilcrowm', Arial, sans-serif; /* body text font inside sections */
-  font-size: 1.2em;
-  line-height: 1.5;
-  text-align: justify;
-}
+      font-family: 'pilcrowm', Arial, sans-serif;
+      font-size: 1.2em;
+      line-height: 1.5;
+      text-align: justify;
+    }
 
     .studio-image {
       width: 100%; max-width: 500px; height: auto; display: block;
@@ -188,18 +178,155 @@
     #submitDialog .two-fields { display: flex; gap: 10px; margin-bottom: 15px; }
     #submitDialog .two-fields > div { flex: 1; }
 
+    /* ========= Testimonials Slider Styles (ADDED) ========= */
+    /* Designed to match cyber-minimal neon/mono vibe; uses site variables */
+    .testimonial-slider {
+      position: relative;
+      border-left: var(--border-2);
+      border-right: var(--border-2);
+      background: rgba(0,0,0,0.35);
+      box-shadow: 0 0 0 1px rgba(0,255,255,0.15), var(--shadow-strong);
+      border-radius: var(--radius-1);
+      padding: 16px 48px; /* inner space around track, leaves room for arrows */
+      overflow: hidden;
+      isolation: isolate; /* keep glow layers beneath content */
+    }
+
+    /* subtle animated border glow */
+    .testimonial-slider::before {
+      content: "";
+      position: absolute; inset: 0;
+      border: 1px solid rgba(0,255,255,0.25);
+      border-radius: var(--radius-1);
+      box-shadow: 0 0 22px rgba(0,255,255,0.15);
+      pointer-events: none;
+      opacity: 0.75;
+      transition: opacity var(--transition-med);
+    }
+    .testimonial-slider:hover::before { opacity: 1; }
+
+    .slider-viewport {
+      overflow: hidden;
+      width: 100%;
+    }
+    .slider-track {
+      display: flex;
+      gap: 12px;
+      will-change: transform;
+      transform: translate3d(0,0,0);
+      transition: transform 500ms cubic-bezier(.2,.7,.2,1);
+    }
+    .slide {
+      flex: 0 0 85%; /* mobile default shows single card with peeking */
+      max-width: 700px;
+      margin: 8px auto;
+      background: rgba(0,0,0,0.4);
+      border: var(--border-1);
+      border-radius: var(--radius-1);
+      padding: 16px 16px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.08);
+      color: var(--c-fg);
+      position: relative;
+    }
+    .slide::after {
+      /* subtle neon divider accent bottom */
+      content: "";
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 2px; background: linear-gradient(90deg, transparent, var(--c-accent), transparent);
+      opacity: .6;
+    }
+    .slide-quote {
+      font-family: 'pilcrowm', Arial, sans-serif;
+      font-size: 1.05em;
+      line-height: 1.6;
+      letter-spacing: .2px;
+      text-align: left; /* maintain readability */
+    }
+    .slide-meta {
+      margin-top: 8px;
+      font-size: .9em;
+      color: var(--c-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: .85;
+    }
+    .slide-meta .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--c-accent);
+      box-shadow: 0 0 6px var(--c-accent);
+      flex: 0 0 6px;
+    }
+
+    /* arrows match menu hover aesthetic */
+    .slider-arrow {
+      position: absolute; top: 50%;
+      transform: translateY(-50%);
+      width: 38px; height: 38px;
+      display: grid; place-items: center;
+      border: var(--border-2);
+      background: rgba(0,0,0,0.5);
+      color: var(--c-fg);
+      cursor: pointer;
+      transition: transform .15s ease, background var(--transition-med), color var(--transition-med);
+      z-index: 2;
+      user-select: none;
+    }
+    .slider-arrow:hover {
+      background: var(--c-accent);
+      color: #000;
+      text-shadow: 0 0 1px var(--c-accent), 0 0 12px var(--c-accent);
+      animation: glitchFlicker .3s steps(2) 1; /* reuse site micro-glitch */
+    }
+    .slider-arrow:active { transform: translateY(-50%) scale(0.94); }
+    .slider-arrow.left { left: 6px; }
+    .slider-arrow.right { right: 6px; }
+
+    /* pagination dots (optional visual hint, keyboard focusable) */
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .slider-dot {
+      width: 8px; height: 8px; 
+      border: 1px solid var(--c-accent);
+      background: transparent;
+      box-shadow: 0 0 8px rgba(0,255,255,0.2);
+      opacity: .7;
+      transition: opacity var(--transition-fast), background var(--transition-fast);
+    }
+    .slider-dot[aria-current="true"] {
+      background: var(--c-accent);
+      opacity: 1;
+    }
+
+    /* reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      .slider-track { transition: none; }
+      .testimonial-slider::before { animation: none; }
+      .slider-arrow:hover { animation: none; }
+    }
+
+    /* responsive tweaks */
+    @media (min-width: 760px) {
+      .slide { flex-basis: 60%; }
+    }
+    @media (min-width: 1024px) {
+      .slide { flex-basis: 45%; }
+    }
+
     /* Mobile guards */
     @media (max-width: 600px) {
       body { padding: 40px 15px; }
       body::after { background: rgba(0,0,0,0.5); }
       h1 img { max-width: 200px; }
-
-      /* Allow wrapping if a label is long; still clipped by .menu-item */
       .menu .menu-item > a { white-space: normal; text-align: left; }
-
       #topSubmitBtn {
         top: 12px; right: 12px; padding: 6px 12px; font-size: .8em; border-width: 2px; transform: scale(.9);
       }
+      .slider-arrow { width: 34px; height: 34px; }
     }
   </style>
 </head>
@@ -227,6 +354,7 @@
     <div id="section-portfolio" class="content-section" role="region" aria-live="polite"></div>
 
     <div class="menu-item"><a href="#" data-section="testimonials">Testimonials</a></div>
+    <!-- Testimonials section container. Slider is injected when opened -->
     <div id="section-testimonials" class="content-section" role="region" aria-live="polite"></div>
 
     <div class="menu-item"><a href="#" id="submitBtn">Submit Your Music</a></div>
@@ -284,16 +412,12 @@
     // =========================
     // MENU WIDTH NORMALIZATION
     // =========================
-    // Measure widest anchor and set a CSS variable so all buttons share that width.
-    // Keeps the menu pinned left, prevents any reflow "jump" on expand.
     function normalizeMenuWidths() {
       const items = Array.from(document.querySelectorAll('.menu .menu-item > a'));
       if (!items.length) return;
 
-      // Reset any previous width to measure natural size
       document.documentElement.style.removeProperty('--menu-button-width');
 
-      // Temporarily measure with shrink-to-fit sizing
       items.forEach(a => {
         a.style.width = 'auto';
         a.style.display = 'inline-block';
@@ -303,26 +427,17 @@
         Math.max(...items.map(a => a.getBoundingClientRect().width))
       );
 
-      // Restore block layout
       items.forEach(a => { a.style.display = 'block'; });
 
-      // Apply uniform width
       document.documentElement.style.setProperty('--menu-button-width', max + 'px');
     }
 
-    // Run after DOM is ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', normalizeMenuWidths);
     } else {
       normalizeMenuWidths();
     }
-
-    // Optional: re-run after all resources (fonts) load for accuracy
-    window.addEventListener('load', () => {
-      normalizeMenuWidths();
-    });
-
-    // Debounced resize handler in case of viewport/font size changes
+    window.addEventListener('load', normalizeMenuWidths);
     let _mwTO;
     window.addEventListener('resize', () => {
       clearTimeout(_mwTO);
@@ -363,6 +478,9 @@
       });
     })();
 
+    // =========================
+    // SECTION CONTENT
+    // =========================
     const sectionContent = {
       about: [
         "Espina Sound Lab is where sonic identity is crafted.",
@@ -388,14 +506,170 @@
         "Before/after shootouts with A/B player.",
         "Selected releases & credits."
       ],
-      testimonials: [
-        "“My mix never sounded this wide.”",
-        "“Clean loudness with no fatigue.”",
-        "“Professional, fast, and musical.”"
-      ]
+      /* testimonials content is now created by buildTestimonialsMarkup() on demand */
+      testimonials: []
     };
 
-    // Accordion toggle (unchanged)
+    // =========================
+    // Testimonials Slider (ADDED)
+    // - Vanilla JS slider built to match your style
+    // - Auto-initializes ONLY when Testimonials section is opened
+    // =========================
+
+    // Source data (you can edit/expand these safely)
+    const testimonialsData = [
+      {
+        quote: "“My mix never sounded this wide. Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.Translation to club systems is finally on point.”",
+        author: "A. Rivera — Producer, Berlin"
+      },
+      {
+        quote: "“Clean loudness with no fatigue. The low end sits perfectly without smearing the mids.”",
+        author: "M. Klein — Label A&R, Hamburg"
+      },
+      {
+        quote: "“Professional, fast, and musical. Subtle moves that made a huge difference.”",
+        author: "J. Park — Artist, Seoul"
+      },
+      {
+        quote: "“The hybrid chain gave our EP a polished, modern edge without losing character.”",
+        author: "Nightgrid — Indie Label"
+      }
+    ];
+
+    function buildTestimonialsMarkup() {
+      // Construct slider markup using site classes and variables
+      return `
+        <h2 style="margin: 0 0 10px 0; font-family: var(--font-ui);font-size: 0.8em;text-align: center ;font-weight: normal;letter-spacing: .5px;">What artists say</h2>
+        <div class="testimonial-slider" role="group" aria-roledescription="carousel" aria-label="Testimonials">
+          <button class="slider-arrow left" aria-label="Previous testimonial" type="button">&#9664;</button>
+          <div class="slider-viewport">
+            <div class="slider-track">
+              ${testimonialsData.map(t => `
+                <article class="slide" aria-label="Testimonial">
+                  <p class="slide-quote">${t.quote}</p>
+                  <div class="slide-meta"><span class="dot" aria-hidden="true"></span><span>${t.author}</span></div>
+                </article>
+              `).join('')}
+            </div>
+          </div>
+          <button class="slider-arrow right" aria-label="Next testimonial" type="button">&#9654;</button>
+        </div>
+        <div class="slider-dots" role="tablist" aria-label="Testimonials pagination">
+          ${testimonialsData.map((_, i) => `<button class="slider-dot" role="tab" aria-selected="${i===0?'true':'false'}" aria-current="${i===0?'true':'false'}" aria-label="Go to slide ${i+1}" data-index="${i}" type="button"></button>`).join('')}
+        </div>
+      `;
+    }
+
+    // Basic slider controller
+    function initTestimonialsSlider(root) {
+      if (!root) return;
+      const viewport = root.querySelector('.slider-viewport');
+      const track = root.querySelector('.slider-track');
+      const slides = Array.from(root.querySelectorAll('.slide'));
+      const prevBtn = root.querySelector('.slider-arrow.left');
+      const nextBtn = root.querySelector('.slider-arrow.right');
+      const dotsWrap = root.parentElement.querySelector('.slider-dots');
+      const dots = Array.from(dotsWrap.querySelectorAll('.slider-dot'));
+
+      let index = 0;
+      let autoTimer = null;
+      const AUTO_MS = 4500; // auto-slide interval
+      const TRANSITION_MS = 500; // keep in sync with CSS
+
+      function update() {
+        const viewportWidth = viewport.clientWidth;
+        const gap = 12; // same as CSS gap on .slider-track
+        // Compute slide width based on first slide’s computed width to align translate
+        const slideWidth = slides[0].getBoundingClientRect().width;
+        const offset = index * (slideWidth + gap);
+        track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+
+        dots.forEach((d, i) => {
+          const current = i === index;
+          d.setAttribute('aria-current', current ? 'true' : 'false');
+          d.setAttribute('aria-selected', current ? 'true' : 'false');
+        });
+      }
+
+      function next() {
+        index = (index + 1) % slides.length;
+        update();
+      }
+      function prev() {
+        index = (index - 1 + slides.length) % slides.length;
+        update();
+      }
+      function goTo(i) {
+        index = Math.max(0, Math.min(slides.length - 1, i));
+        update();
+      }
+
+      function startAuto() {
+        stopAuto();
+        autoTimer = setInterval(next, AUTO_MS);
+      }
+      function stopAuto() {
+        if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+      }
+
+      // Events
+      nextBtn.addEventListener('click', () => { next(); startAuto(); });
+      prevBtn.addEventListener('click', () => { prev(); startAuto(); });
+
+      dots.forEach(d => {
+        d.addEventListener('click', () => {
+          const i = parseInt(d.getAttribute('data-index'), 10);
+          goTo(i);
+          startAuto();
+        });
+      });
+
+      // Pause on hover/focus to respect user control
+      root.addEventListener('mouseenter', stopAuto);
+      root.addEventListener('mouseleave', startAuto);
+      root.addEventListener('focusin', stopAuto);
+      root.addEventListener('focusout', startAuto);
+
+      // Simple swipe support
+      let startX = 0; let dx = 0; let swiping = false;
+      viewport.addEventListener('pointerdown', (e) => { swiping = true; startX = e.clientX; dx = 0; viewport.setPointerCapture(e.pointerId); stopAuto(); });
+      viewport.addEventListener('pointermove', (e) => {
+        if (!swiping) return;
+        dx = e.clientX - startX;
+        // apply small drag for affordance
+        track.style.transition = 'none';
+        track.style.transform = `translate3d(calc(${-index * (slides[0].getBoundingClientRect().width + 12)}px + ${dx}px),0,0)`;
+      });
+      function endSwipe() {
+        if (!swiping) return;
+        track.style.transition = ''; // restore
+        if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); } else { update(); }
+        swiping = false; dx = 0; startAuto();
+      }
+      viewport.addEventListener('pointerup', endSwipe);
+      viewport.addEventListener('pointercancel', endSwipe);
+      viewport.addEventListener('pointerleave', endSwipe);
+
+      // Recalc on resize
+      window.addEventListener('resize', () => {
+        // Wait for layout to settle
+        setTimeout(update, 50);
+      });
+
+      // Initial draw
+      update();
+      startAuto();
+
+      // Expose a destroy method if needed later
+      return { destroy: () => { stopAuto(); } };
+    }
+
+    // Keep a flag so we only build once
+    let testimonialsInitialized = false;
+
+    // =========================
+    // Accordion toggle (UNCHANGED LOGIC) + injection of testimonials
+    // =========================
     document.querySelectorAll('.menu a[data-section]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
@@ -408,13 +682,33 @@
 
         // Show the clicked one if it was hidden
         if (!isVisible) {
-          target.innerHTML = sectionContent[sec]
-            .map(item => item.startsWith("<img") ? item : `<p>${item}</p>`)
-            .join("");
-          target.style.display = "block";
+          if (sec === 'testimonials') {
+            // Inject slider markup only when Testimonials is opened (ADDED)
+            const html = buildTestimonialsMarkup();
+            target.innerHTML = html;
+            target.style.display = "block";
+
+            // Initialize slider on the injected markup
+            const sliderRoot = target.querySelector('.testimonial-slider');
+            initTestimonialsSlider(sliderRoot);
+          } else {
+            // Default behavior for other sections
+            // If we had template arrays, render them
+            const content = sectionContent[sec] && sectionContent[sec].length
+              ? sectionContent[sec]
+              : [];
+            target.innerHTML = content.map(item => item.startsWith("<img") ? item : `<p>${item}</p>`).join("");
+            target.style.display = "block";
+          }
         }
       });
     });
   </script>
 </body>
 </html>
+
+
+
+
+
+
