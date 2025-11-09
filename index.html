@@ -6,7 +6,22 @@
 <title>Espina Sound Lab</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
-
+@font-face {
+  font-family: 'Nultien-Regular';
+  src: url('fonts/Nultien-Regular.otf');
+}
+@font-face {
+  font-family: 'Euro';
+  src: url('fonts/EurostileExt-Med.otf');
+}
+@font-face {
+  font-family: 'Utara';
+  src: url('fonts/Utara-Regular.woff2');
+}
+@font-face {
+  font-family: 'steps';
+  src: url('fonts/Steps-Mono-Thin.otf');
+}
 /* Body with dark background and background logo */
 body {
   font-family: "Silkscreen", Courier, monospace;
@@ -37,7 +52,7 @@ body::after {
 /* Wordmark header */
 h1 {
   font-size: 0; 
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   margin-top: 0;
   text-align: left;
 }
@@ -64,7 +79,7 @@ a {
   position: relative;
   display: block;
   text-transform: uppercase;
-  margin: 6px 0;          /* keeps your previous spacing */
+  margin: 5px 0;          /* keeps your previous spacing */
   padding: 5px 20px;     /* adjust padding for effect */
   text-decoration: none;
   color: #fff;            /* original link color */
@@ -169,6 +184,8 @@ a {
 
 p.tagline {
   display: inline-block;
+  /* margin-bottom: 85px; /* increases space before sections */
+
 }
 
 /* Top-right submit button */
@@ -212,13 +229,25 @@ transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
   background: #000;
   color: #fff;
   border: 2px solid #0ff;
-  padding: 30px;
-  max-width: 400px;
-  width: 90%;
+  padding: 20px;
+  max-width: 400px;  /* desktop max */
+  width: 90vw;       /* relative to viewport width */
   font-family: "Silkscreen", Courier, monospace;
   box-shadow: 0 0 15px #0ff;
   text-align: left;
+  max-height: 90vh;  /* limit height on mobile */
+  overflow-y: auto;  /* allow scrolling if content too tall */
+  box-sizing: border-box;
+  border-radius: 6px;
 }
+
+/* Hide button when popup is open */
+#submitDialog.show + #topSubmitBtn,
+#submitDialog.show ~ #topSubmitBtn {
+  display: none;
+}
+
+
 #submitDialog input,
 #submitDialog textarea {
   width: 100%;
@@ -242,6 +271,8 @@ transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
   border: none;
   color: #000;
   cursor: pointer;
+ font-family: "Silkscreen", Courier, monospace; /* force same font as body */
+  font-size: 1em; /* adjust if needed */
 }
 #submitDialog button:hover {
   background: #33ffff;
@@ -297,6 +328,19 @@ transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
   box-shadow: 0 0 30px rgba(0,0,0,0.4); /* subtle shadow */
 }
 
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  background: rgba(0,0,0,0.7); /* optional semi-transparent background */
+  color: #fff;
+  font-family: "Silkscreen", monospace;
+  z-index: -1;
+}
+
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
@@ -322,6 +366,18 @@ transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
     transform: scale(0.9);
   }
 }
+p.tagline {
+  font-family: 'Silkscreen', monospace; /* or your custom font */
+  font-size: 1em;      /* change size */
+  color: rgba(255, 255, 255, 0.976);           /* change color */
+  text-transform: ; /* make all caps */
+  font-weight: normal;      /* bold */
+  letter-spacing: 0px;    /* spacing between letters */
+  margin-top: 10px;       /* space above */
+  margin-bottom: 30px;    /* space below */
+  margin-left: 0.4%;
+  text-align: center;     /* center on page */
+}
 
 
 </style>
@@ -332,7 +388,8 @@ transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 
 <h1><img src="wordmark.png" alt="Espina Sound Lab"></h1>
 <button id="topSubmitBtn">Submit Your Music</button>
-<p class="tagline">Mixing and Mastering Studio</p>
+<p class="tagline">Mixing and Mastering Studio </p>
+
 
 <!-- Menu + Sections -->
 <div class="links">
@@ -358,9 +415,10 @@ transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
   <a href="mailto:hello@espinasoundlab.xyz">Contact</a>
 </div>
 
-<p style="margin-top:40px;">
-© Espina Sound Lab 📍 Kreuzberg, Berlin
-</p>
+<footer>
+  © Espina Sound Lab 📍 Kreuzberg, Berlin
+</footer>
+
 
 <!-- Submit Track Dialog -->
 <div id="submitDialog">
@@ -415,13 +473,27 @@ transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
   const topSubmitBtn = document.getElementById("topSubmitBtn");
 
   function openPopup() {
-    submitDialog.style.display = "flex";
-    const first = submitDialog.querySelector("input, textarea, button");
-    if(first) first.focus();
-  }
-  function closePopup() {
-    submitDialog.style.display = "none";
-  }
+  submitDialog.style.display = "flex";
+  submitDialog.classList.add("show");
+  
+  // Hide the button while popup is open
+  if(topSubmitBtn) topSubmitBtn.style.display = "none";
+  if(submitBtn) submitBtn.style.display = "none";
+  
+  const first = submitDialog.querySelector("input, textarea, button");
+  if(first) first.focus();
+}
+
+function closePopup() {
+  submitDialog.style.display = "none";
+  submitDialog.classList.remove("show");
+  
+  // Show the button again
+  if(topSubmitBtn) topSubmitBtn.style.display = "block";
+  if(submitBtn) submitBtn.style.display = "block";
+}
+
+
 
   [submitBtn, topSubmitBtn].forEach(btn => {
     if(btn) btn.addEventListener("click", e => { e.preventDefault(); openPopup(); });
